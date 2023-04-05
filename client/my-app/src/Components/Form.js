@@ -5,15 +5,16 @@ import {useState} from 'react'
 
 function Form({movies}) {
 	const [dbvalue, setDbValue] = useState(0) 
-    const [filmname, setFilmname] = useState("");
+    const [filmname, setFilmname] = useState(movies[0].Title);
     const [fullname, setFullname] = useState(null);
-    const [sumnumber, setSumnumber] = useState(0);
+    const sumNumber=dbvalue*10;
 
+console.log(movies);
 	async function postData(url = "http://localhost:5000/api/ticket", data = {
         "FilmName": filmname,
         "Name": fullname,
         "db": dbvalue,
-        "sum": sumnumber
+        "sum": sumNumber
     }) {
 
         console.log("clicked");
@@ -47,9 +48,9 @@ function Form({movies}) {
 		<label>Full Name</label>		
 	</div>
 	<div class="input-container">		
-		<select type="select" required="" placeholder='Movie'> 
+		<select type="select" required="" placeholder='Movie' onChange={(e) => setFilmname(e.target.value)}> 
         {movies.map((movie)=>(
-        <option onChange={(e) => setFilmname(e.target.value)}> 
+        <option > 
             {movie.Title}
         </option>
 		))}
@@ -60,7 +61,7 @@ function Form({movies}) {
 		<label>Amount</label>
 	</div>
    < div class="input-container">
-		<input type="text" required="" placeholder='Price' value={dbvalue * 10 + "$"} readOnly={true} onChange={(e) => setSumnumber(e.target.value)}/>
+		<input type="text" required="" placeholder='Price' value={sumNumber+ "$"} readOnly={true} db/>
 		
 	</div>
 		<button type="button" class="btn" onClick={() => postData()}>submit</button>

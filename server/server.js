@@ -46,6 +46,7 @@ app.get("/api/ticket",async (req,res) =>{
 })
 
 app.post("/api/ticket", (req, res) => {
+    console.log(req.body);
     const FilmName = req.body.FilmName;
     const Name = req.body.Name;
     const db = req.body.db;
