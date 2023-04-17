@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 let moviesArray=[];
 import * as fs from 'fs';
-
+const apikey="2b073566&s";
 
 async function getAllData(){
     for(let i=1;i<101;i++){
@@ -9,7 +9,7 @@ async function getAllData(){
     }
 }
 async function fetchOnes(index){
-     const movie=await fetch(`https://www.omdbapi.com/?apikey=2b073566&s=all&type=movie&page=${index}`)
+     const movie=await fetch(`https://www.omdbapi.com/?apikey=${apikey}&s=all&type=movie&page=${index}`)
      const data= await movie.json();
         moviesArray=[...moviesArray, ...data.Search];
     // console.log(data.Search);
