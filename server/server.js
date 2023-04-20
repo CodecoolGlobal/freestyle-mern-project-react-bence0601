@@ -68,12 +68,12 @@ app.delete("/api/ticket/:id", async (req, res, next) => {
 
 app.post("/api/ticket", (req, res) => {
   console.log(req.body);
-  const FilmName = req.body.FilmName;
+  const Title = req.body.Title;
   const Name = req.body.Name;
   const db = req.body.db;
   const sum = req.body.sum;
   const datas = new HumanData({
-    FilmName,
+    Title,
     Name,
     db,
     sum,
@@ -83,7 +83,15 @@ app.post("/api/ticket", (req, res) => {
     .then((datas) => res.json(datas))
     .catch((err) => res.status(400).json({ success: false }));
 });
-
+app.patch("/api/ticket/:id",async(req,res,next)=>{
+  try {
+    const id = req.params.id;
+    const ticket = await HumanData.findByIdAndUpdate(id);
+    res.json(ticket);
+  } catch (err) {
+    next(err);
+  }
+});
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => console.log(`listening to port ${port}`));
