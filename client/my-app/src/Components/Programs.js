@@ -18,8 +18,8 @@ function Programs() {
   return (
     <div className="container">
       {!clicked ? (
-        choosedMovies.map((movie) => (
-          <div className="main">
+        choosedMovies.map((movie, id) => (
+          <div className="main" key={id}>
             <ul className="cards">
               <li className="cards_item">
                 <div className="card">
@@ -51,9 +51,9 @@ function Programs() {
           </div>
         ))
       ) : (
-        
-        <Form movies={choosedMovies}/>
-        
+
+        <Form movies={choosedMovies} />
+
       )}
     </div>
   );
