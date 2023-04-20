@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "../Styles/programs.css";
 import Form from "./Form";
+
 function Programs() {
   const [choosedMovies, setChoosedMovies] = useState([]);
   const [clicked, setClicked] = useState(false);
@@ -51,9 +52,7 @@ function Programs() {
           </div>
         ))
       ) : (
-
-        <Form movies={choosedMovies} />
-
+        <Form />
       )}
     </div>
   );

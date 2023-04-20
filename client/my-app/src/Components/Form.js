@@ -3,21 +3,53 @@ import "../Styles/form.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Form({ movies }) {
+function Form({ ticket = null }) {
+  const [title, setTitle] = useState();
+  const [fullname, setFullname] = useState();
   const [dbvalue, setDbValue] = useState(0);
-  const [filmname, setFilmname] = useState(movies[0].Title);
-  const [fullname, setFullname] = useState(null);
-  const sumNumber = dbvalue * 10;
+  const [sumNumber, setSumnumber] = useState(0);
+  const [chosedMovies, setChoosedMovies] = useState([]);
   const nav = useNavigate();
 
   useEffect(() => {
-    console.log(movies);
+    fetch("http://localhost:5000/movies")
+      .then((response) => response.json())
+      .then((data) => setChoosedMovies(data.slice(0, 5)));
+
+    if (ticket) {
+      setFullname(ticket.Name);
+      setDbValue(ticket.db);
+      setSumnumber(ticket.db * 10);
+    }
   }, []);
+
+  async function submit() {
+    if (ticket) {
+      handleUpdate();
+    } else {
+      postData();
+    }
+  }
+
+  const handleUpdate = () => { // TODO
+    return fetch(`http://localhost:5000/api/ticket/${ticket.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
+
+  const handleAmountChange = (e) => {
+    const amount = e.target.value;
+    setDbValue(amount);
+    setSumnumber(amount * 10);
+  }
 
   async function postData(
     url = "http://localhost:5000/api/ticket",
     data = {
-      Title: filmname,
+      Title: title,
       Name: fullname,
       db: dbvalue,
       sum: sumNumber,
@@ -40,6 +72,7 @@ function Form({ movies }) {
     nav("/myticket");
     return response.json();
   }
+
   return (
     <div className="box">
       <form>
@@ -48,7 +81,7 @@ function Form({ movies }) {
           <input
             type="text"
             required=""
-            placeholder="Full Name"
+            placeholder={ticket ? fullname : "Full Name"}
             onChange={(e) => setFullname(e.target.value)}
           />
           <label>Full Name</label>
@@ -58,9 +91,9 @@ function Form({ movies }) {
             type="select"
             required=""
             placeholder="Movie"
-            onChange={(e) => setFilmname(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
           >
-            {movies.map((movie, id) => (
+            {chosedMovies.map((movie, id) => (
               <option key={id}>{movie.Title}</option>
             ))}
           </select>
@@ -69,8 +102,8 @@ function Form({ movies }) {
           <input
             type="mail"
             required=""
-            placeholder="Amount"
-            onChange={(e) => setDbValue(e.target.value)}
+            placeholder={ticket ? dbvalue : "Amount"}
+            onChange={(e) => handleAmountChange(e)}
           />
           <label>Amount</label>
         </div>
@@ -81,10 +114,9 @@ function Form({ movies }) {
             placeholder="Price"
             value={sumNumber + "$"}
             readOnly={true}
-            db
           />
         </div>
-        <button type="button" class="btn" onClick={() => postData()}>
+        <button type="button" className="btn" onClick={() => submit()}>
           submit
         </button>
       </form>

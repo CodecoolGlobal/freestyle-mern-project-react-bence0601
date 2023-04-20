@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import "../Styles/ticket.css";
 import { useNavigate } from "react-router-dom";
 
-
 async function getData(url = "http://localhost:5000/api/ticket") {
   const response = await fetch(url, {
     method: "GET",
@@ -29,17 +28,10 @@ const handelDelete = (id) => {
     },
   }).then((resp) => resp.json());
 };
-const handleUpdate = (id) => {
-  return fetch(`http://localhost:5000/api/ticket/${id}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-};
 
 function MyTicket() {
   const [myTickets, setMyTickets] = useState([]);
+  const [myTicket, setMyTicket] = useState({});
   const [clicked, setClicked] = useState(false);
   const [yes, setYes] = useState(false);
   const [none, setNone] = useState(false);
@@ -58,16 +50,16 @@ function MyTicket() {
     navigate("/programs");
   };
 
-  const updateTicket = (id) => {
+  const updateTicket = (i) => {
     setClicked(true);
-    handleUpdate(id);
+    setMyTicket(myTickets[i]);
   };
-  
+
   return (
     <div>
       {myTickets.length !== 0 ? (
         <>
-          {myTickets.map((tickets) => (
+          {myTickets.map((tickets, i) => (
             <ul key={tickets._id}>
               <li>{tickets.Name}</li>
               <li>{tickets.Title}</li>
@@ -78,14 +70,14 @@ function MyTicket() {
               <button
                 className="btn"
                 onClick={() => {
-                  updateTicket(tickets._id);
+                  updateTicket(i);
                 }}
               >
                 Update
               </button>
             </ul>
           ))}
-          {clicked ? <Form movies={myTickets}/> : null}
+          {clicked ? <Form ticket={myTicket} /> : null}
         </>
       ) : (
         <div className="Load">

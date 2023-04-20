@@ -83,7 +83,7 @@ app.post("/api/ticket", (req, res) => {
     .then((datas) => res.json(datas))
     .catch((err) => res.status(400).json({ success: false }));
 });
-app.patch("/api/ticket/:id",async(req,res,next)=>{
+app.patch("/api/ticket/:id", async (req, res, next) => {
   try {
     const id = req.params.id;
     const ticket = await HumanData.findByIdAndUpdate(id);
